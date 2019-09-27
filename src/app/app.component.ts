@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
     <app-map></app-map>
   `,
 })
-export class AppComponent {}
+export class AppComponent { }
