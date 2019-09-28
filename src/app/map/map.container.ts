@@ -31,9 +31,22 @@ export class MapContainerComponent implements OnInit {
     const busstop = await this.busService.busstop();
     const route = await this.busService.route();
     const bus = await this.busService.bus();
+    this.map.putMarker({
+      busid: bus.busid,
+      lat: bus.latitude,
+      lng: bus.longitude,
+    });
+
+    setInterval(async () => {
+      const b = await this.busService.bus();
+      this.map.updateMarkerLatLng({
+        busid: b.busid,
+        lat: b.latitude,
+        lng: b.longitude,
+      });
+    }, 5000);
 
     console.log(busstop);
-    console.log(route);
-    console.log(bus);
+    // console.log(route);
   }
 }

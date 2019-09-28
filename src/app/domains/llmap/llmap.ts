@@ -2,6 +2,9 @@ import * as L from 'leaflet';
 
 export class LLMap {
   llmap!: L.Map;
+  marker: {
+    [busid: string]: L.Marker;
+  } = {};
 
   initMap(elem: any) {
     const token =
@@ -40,7 +43,7 @@ export class LLMap {
     );
 
     this.llmap = L.map(elem)
-      .setView([35.69432984468491, 139.74267643565133], 12)
+      .setView([35.957151, 136.223857], 12)
       .addLayer(streetsLayer);
 
     L.control
@@ -53,5 +56,68 @@ export class LLMap {
         { position: 'bottomright' },
       )
       .addTo(this.llmap);
+  }
+
+  putMarker(marker: {
+    busid: string;
+    lat: number;
+    lng: number;
+  }) {
+    /** Icon */
+    const markerHtmlStyles = `
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      box-shadow: 0 0 0 8px rgba(236,64,122,0.5);
+      border-radius: 50%;
+      border: 2px solid #fff;
+      background-color: rgba(236,64,122,1);
+    `;
+    const icon = L.divIcon({
+      className: 'marker-icon',
+      iconAnchor: [16, 16],
+      popupAnchor: [0, 0],
+      html: `
+        <span style="${markerHtmlStyles}">${marker.busid}</span>
+      `,
+    });
+
+    // const comment = `
+    // <p style="font-size: 14px;">
+    //   <a href="${marker.link}" target="_blank"><img src="${marker.img}" width="24" style="vertical-align: middle;" /></a>
+    //   <a href="${marker.link}" target="_blank">
+    //     <b>${marker.name}</b>
+    //   </a>
+    // </p>
+    // <p>${marker.text}</p>
+    // <p><date>${marker.createdAt}</date> ${marker.place}</p>
+    // `;
+
+    console.log(marker.busid);
+    this.marker[`bus${marker.busid}`] = L.marker([marker.lat, marker.lng], {
+      icon,
+      draggable: false,
+    })
+      .addTo(this.llmap);
+    // .bindPopup(comment, {
+    //   closeButton: true,
+    //   autoClose: false,
+    //   closeOnClick: false,
+    // })
+    // .openPopup();
+  }
+
+  updateMarkerLatLng(marker: {
+    busid: string;
+    lat: number;
+    lng: number;
+  }) {
+    console.log(marker.busid);
+    const newLatLng = new L.LatLng(marker.lat, marker.lng);
+    this.marker[`bus${marker.busid}`].setLatLng(newLatLng);
   }
 }

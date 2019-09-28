@@ -1,41 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 
+import * as BusModel from './bus.model';
+
 @Injectable({
   providedIn: 'root',
 })
 export class BusService {
   private readonly routeApi =
-    'https://tutujibus.com/rosenLookup.php?rosenid=1&binid=2';
-  private readonly busApi = 'http://tutujibus.com/busLookup.php?binid=2';
-  private readonly busstopApi = 'http://tutujibus.com/busstopLookup.php?rosenid=2';
+    'https://tutujibus.com/rosenLookup.php?rosenid=2&binid=1';
+  private readonly busApi = 'https://tutujibus.com/busLookup.php?busid=10';
+  private readonly busstopApi = 'https://tutujibus.com/busstopLookup.php?rosenid=2';
 
   constructor(private http: HttpClient) { }
 
-  bus(keyword?: string): Promise<any> {
+  bus(keyword?: string): Promise<BusModel.Bus> {
     const params = {
       ...new HttpParams(),
       params: keyword ? { keyword } : null,
     };
 
-    return this.http.jsonp(`${this.busApi}`, 'callback').toPromise();
+    return this.http.jsonp<BusModel.Bus>(`${this.busApi}`, 'callback').toPromise();
   }
 
-  route(keyword?: string): Promise<any> {
+  route(keyword?: string): Promise<BusModel.Bus> {
     const params = {
       ...new HttpParams(),
       params: keyword ? { keyword } : null,
     };
 
-    return this.http.jsonp(`${this.routeApi}`, 'callback').toPromise();
+    return this.http.jsonp<BusModel.Bus>(`${this.routeApi}`, 'callback').toPromise();
   }
 
-  busstop(keyword?: string): Promise<any> {
+  busstop(keyword?: string): Promise<BusModel.Busstop[]> {
     const params = {
       ...new HttpParams(),
       params: keyword ? { keyword } : null,
     };
 
-    return this.http.jsonp(`${this.busstopApi}`, 'callback').toPromise();
+    return this.http.jsonp<BusModel.Busstop[]>(`${this.busstopApi}`, 'callback').toPromise();
   }
 }
