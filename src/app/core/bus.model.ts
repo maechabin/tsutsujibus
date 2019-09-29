@@ -12,9 +12,20 @@ export interface Bus {
   speed: number; // 0
 }
 
+export interface Busstops {
+  busstop: Busstop[];
+}
+
 export interface Busstop {
   id: string; // "1"
   latitude: number; // 35.972846
   longitude: number; // 136.181591
   name: string; // "神明駅"
+}
+
+export interface Routes {
+  rosen: {
+    id: string;
+    name: string;
+  }[];
 }

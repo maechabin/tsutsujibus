@@ -9,8 +9,9 @@ import * as BusModel from './bus.model';
 export class BusService {
   private readonly routeApi =
     'https://tutujibus.com/rosenLookup.php?rosenid=2&binid=1';
-  private readonly busApi = 'https://tutujibus.com/busLookup.php?busid=10';
-  private readonly busstopApi = 'https://tutujibus.com/busstopLookup.php?rosenid=2';
+  private readonly busApi = 'https://tutujibus.com/busLookup.php?busid=5';
+  private readonly busstopApi = 'https://tutujibus.com/busstopLookup.php';
+  private readonly routeNumberApi = 'https://tutujibus.com/rosenidLookup.php';
 
   constructor(private http: HttpClient) { }
 
@@ -32,11 +33,20 @@ export class BusService {
     return this.http.jsonp<BusModel.Bus>(`${this.routeApi}`, 'callback').toPromise();
   }
 
-  busstop(keyword?: string): Promise<BusModel.Busstop[]> {
-    const params = {
-      ...new HttpParams(),
-      params: keyword ? { keyword } : null,
-    };
+  /**
+   * 路線ごとのバス停の座標データを取得する
+   * @param rosenid 路線ID
+   */
+  busstop(rosenid: string): Promise<BusModel.Busstops> {
+    return this.http.jsonp<BusModel.Busstops>(`${this.busstopApi}?rosenid=${rosenid}`, 'callback').toPromise();
+  }
+
+  /**
+   * 路線番号と路線名を取得する
+   */
+  routes(): Promise<BusModel.Routes> {
+    return this.http.jsonp<BusModel.Routes>(`${this.routeNumberApi}`, 'callback').toPromise();
+  }
 
     return this.http.jsonp<BusModel.Busstop[]>(`${this.busstopApi}`, 'callback').toPromise();
   }

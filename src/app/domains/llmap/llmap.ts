@@ -5,6 +5,9 @@ export class LLMap {
   marker: {
     [busid: string]: L.Marker;
   } = {};
+  busstopMarker: {
+    [busid: string]: L.Marker;
+  } = {};
 
   initMap(elem: any) {
     const token =
@@ -43,7 +46,7 @@ export class LLMap {
     );
 
     this.llmap = L.map(elem)
-      .setView([35.957151, 136.223857], 12)
+      .setView([35.957151, 136.223857], 14)
       .addLayer(streetsLayer);
 
     L.control
@@ -109,6 +112,45 @@ export class LLMap {
     //   closeOnClick: false,
     // })
     // .openPopup();
+
+  putBusstopMarker(busstop: {
+    id: string;
+    name: string;
+    latitude: number;
+    longitude: number;
+  }) {
+    /** Icon */
+    const markerHtmlStyles1 = `
+        position: absolute;
+        left: -5px;
+        top: -5px;
+        background-color: rgba(236,64,122,0.9);
+        width: 10px;
+        height: 10px;
+      `;
+    const icon = L.divIcon({
+      className: 'busstop-icon',
+      iconAnchor: [0, 0],
+      popupAnchor: [0, 0],
+      html: `
+          <span style="${markerHtmlStyles1}" />
+        `,
+    });
+
+    const comment = `<p>${busstop.name}</p>`;
+
+    this.busstopMarker[`busstop${busstop.id}`] = L.marker([busstop.latitude, busstop.longitude], {
+      icon,
+      draggable: false,
+    })
+      .addTo(this.llmap)
+      .bindPopup(comment);
+  }
+
+  clearBusstopMarker() {
+    Object.values(this.busstopMarker).forEach((marker) => {
+      this.llmap.removeLayer(marker);
+    });
   }
 
   updateMarkerLatLng(marker: {
