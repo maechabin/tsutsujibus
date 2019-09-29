@@ -3,12 +3,12 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { LLMap } from '../domains/llmap/llmap';
 import { BusService } from '../core/bus.service';
 import * as busModel from '../core/bus.model';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-map',
   template: `
   <div class="app">
+    <app-alert class="alert" [isRunning]="isRunning"></app-alert>
     <app-nav
       [routes]="routes"
       class="nav"
@@ -21,6 +21,13 @@ import { ThrowStmt } from '@angular/compiler';
     `
       .app {
         display: flex;
+      }
+
+      .alert {
+        position: absolute;
+        z-index: 10000;
+        left: calc(50% - 220px);
+        right: calc(50% - 220px);
       }
 
       .map {
@@ -43,6 +50,7 @@ export class MapContainerComponent implements OnInit {
   routeid = '1';
   timetables: busModel.Timetable[] = [];
   runningTimetables: busModel.Timetable[] = [];
+  isRunning = true;
 
   constructor(private elementRef: ElementRef, private busService: BusService) { }
 
@@ -67,6 +75,7 @@ export class MapContainerComponent implements OnInit {
   }
 
   handleRouteClick(routeid: string) {
+    this.isRunning = true;
     this.routeid = routeid;
     this.getBusstop();
     this.getTimeTable();
@@ -87,9 +96,13 @@ export class MapContainerComponent implements OnInit {
     const timeTable = await this.busService.timeTable(this.routeid);
     this.timetables = timeTable.timetable;
     this.runningTimetables = this.getRunningTimetables();
-    this.getRunningTimetables().forEach(timetable => {
-      this.startBusLocation(timetable.binid);
-    });
+    if (this.runningTimetables.length > 0) {
+      this.getRunningTimetables().forEach(timetable => {
+        this.startBusLocation(timetable.binid);
+      });
+    } else {
+      this.isRunning = false;
+    }
   }
 
   getRunningTimetables(): busModel.Timetable[] {
