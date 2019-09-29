@@ -2,7 +2,7 @@ import * as L from 'leaflet';
 
 export class LLMap {
   llmap!: L.Map;
-  marker: {
+  busMarker: {
     [busid: string]: L.Marker;
   } = {};
   busstopMarker: {
@@ -79,6 +79,7 @@ export class LLMap {
       border-radius: 50%;
       border: 2px solid #fff;
       background-color: rgba(236,64,122,1);
+      z-index: 10000;
     `;
     const icon = L.divIcon({
       className: 'marker-icon',
@@ -100,18 +101,21 @@ export class LLMap {
     // <p><date>${marker.createdAt}</date> ${marker.place}</p>
     // `;
 
-    console.log(marker.busid);
-    this.marker[`bus${marker.busid}`] = L.marker([marker.lat, marker.lng], {
+    this.busMarker[`bus${marker.busid}`] = L.marker([marker.lat, marker.lng], {
       icon,
       draggable: false,
     })
-      .addTo(this.llmap);
-    // .bindPopup(comment, {
-    //   closeButton: true,
-    //   autoClose: false,
-    //   closeOnClick: false,
-    // })
-    // .openPopup();
+      .addTo(this.llmap).bindPopup('');
+  }
+
+  clearBusMarker() {
+    Object.values(this.busMarker).forEach((marker) => {
+      this.llmap.removeLayer(marker);
+    });
+    Object.keys(this.busMarker).forEach((key) => {
+      delete this.busMarker[key];
+    });
+  }
 
   putBusstopMarker(busstop: {
     id: string;
@@ -127,6 +131,7 @@ export class LLMap {
         background-color: rgba(236,64,122,0.9);
         width: 10px;
         height: 10px;
+        z-index: 100;
       `;
     const icon = L.divIcon({
       className: 'busstop-icon',
@@ -157,9 +162,16 @@ export class LLMap {
     busid: string;
     lat: number;
     lng: number;
+    comment: string;
   }) {
     console.log(marker.busid);
     const newLatLng = new L.LatLng(marker.lat, marker.lng);
-    this.marker[`bus${marker.busid}`].setLatLng(newLatLng);
+
+    if (!this.busMarker[`bus${marker.busid}`]) {
+      this.putMarker(marker);
+    }
+
+    this.busMarker[`bus${marker.busid}`].setLatLng(newLatLng);
+    // .setPopupContent(marker.comment).openPopup();
   }
 }

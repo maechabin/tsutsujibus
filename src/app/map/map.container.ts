@@ -3,6 +3,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { LLMap } from '../domains/llmap/llmap';
 import { BusService } from '../core/bus.service';
 import * as busModel from '../core/bus.model';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-map',
@@ -40,6 +41,8 @@ export class MapContainerComponent implements OnInit {
   readonly map = new LLMap();
   routes: busModel.Routes;
   routeid = '1';
+  timetables: busModel.Timetable[] = [];
+  runningTimetables: busModel.Timetable[] = [];
 
   constructor(private elementRef: ElementRef, private busService: BusService) { }
 
@@ -49,43 +52,83 @@ export class MapContainerComponent implements OnInit {
     this.map.initMap(mapElem);
 
     this.getBusstop();
+    this.getTimeTable();
 
     this.routes = await this.busService.routes();
 
-    const route = await this.busService.route();
+    // const route = await this.busService.route();
     const bus = await this.busService.bus();
 
-    this.map.putMarker({
-      busid: bus.busid,
-      lat: bus.latitude,
-      lng: bus.longitude,
-    });
-
-    setInterval(async () => {
-      const b = await this.busService.bus();
-      this.map.updateMarkerLatLng({
-        busid: b.busid,
-        lat: b.latitude,
-        lng: b.longitude,
-      });
-    }, 5000);
-
-    console.log(busstop);
-    // console.log(route);
+    // this.map.putMarker({
+    //   busid: bus.busid,
+    //   lat: bus.latitude,
+    //   lng: bus.longitude,
+    // });
+  }
 
   handleRouteClick(routeid: string) {
-    console.log(routeid);
     this.routeid = routeid;
     this.getBusstop();
+    this.getTimeTable();
   }
 
   async getBusstop() {
     this.map.clearBusstopMarker();
+    this.map.clearBusMarker();
     const busstops = await this.busService.busstop(this.routeid);
-    console.log(busstops.busstop);
 
     busstops.busstop.forEach(busstop => {
       this.map.putBusstopMarker(busstop);
     });
+  }
+
+  async getTimeTable() {
+    const timeTable = await this.busService.timeTable(this.routeid);
+    this.timetables = timeTable.timetable;
+    this.runningTimetables = this.getRunningTimetables();
+    this.getRunningTimetables().forEach(timetable => {
+      this.startBusLocation(timetable.binid);
+    });
+  }
+
+  getRunningTimetables(): busModel.Timetable[] {
+    return this.timetables.filter(timetable => {
+      const startTime = timetable.list[0].time.split(':');
+      const finishTime = timetable.list[timetable.list.length - 1].time.split(':');
+
+      const startTimeNum = Number(startTime[0]) * 3600 + Number(startTime[1]) * 60 + 0 / 1000;
+      const finishTimeNum = Number(finishTime[0]) * 3600 + Number(finishTime[1]) * 60 + 0 / 1000;
+      const currentTimeNum = new Date().getHours() * 3600 + new Date().getMinutes() * 60 + 0 / 1000;
+
+      return startTimeNum <= currentTimeNum && currentTimeNum <= finishTimeNum;
+    });
+  }
+
+  startBusLocation(binid: string) {
+    setInterval(async () => {
+      // console.log(this.routeid);
+      // console.log(a[0].binid);
+
+      const b = await this.busService.route(this.routeid, binid);
+      const rosen = this.routes.rosen.find(r => r.id === b.rosenid);
+
+      // console.log(b && b.busid);
+
+      if (b && b.busid) {
+        const comment = `
+        <div>
+          <p>${rosen.name}</p>
+          <p>行き先: ${b.destination}</p>
+        </div>
+      `;
+
+        this.map.updateMarkerLatLng({
+          busid: b.busid,
+          lat: b.latitude,
+          lng: b.longitude,
+          comment,
+        });
+      }
+    }, 5000);
   }
 }

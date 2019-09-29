@@ -8,10 +8,11 @@ import * as BusModel from './bus.model';
 })
 export class BusService {
   private readonly routeApi =
-    'https://tutujibus.com/rosenLookup.php?rosenid=2&binid=1';
+    'https://tutujibus.com/rosenLookup.php';
   private readonly busApi = 'https://tutujibus.com/busLookup.php?busid=5';
   private readonly busstopApi = 'https://tutujibus.com/busstopLookup.php';
   private readonly routeNumberApi = 'https://tutujibus.com/rosenidLookup.php';
+  private readonly timeTableApi = 'https://tutujibus.com/timetableLookup.php';
 
   constructor(private http: HttpClient) { }
 
@@ -24,13 +25,8 @@ export class BusService {
     return this.http.jsonp<BusModel.Bus>(`${this.busApi}`, 'callback').toPromise();
   }
 
-  route(keyword?: string): Promise<BusModel.Bus> {
-    const params = {
-      ...new HttpParams(),
-      params: keyword ? { keyword } : null,
-    };
-
-    return this.http.jsonp<BusModel.Bus>(`${this.routeApi}`, 'callback').toPromise();
+  route(rosenid: string, binid: string): Promise<BusModel.Bus> {
+    return this.http.jsonp<BusModel.Bus>(`${this.routeApi}?rosenid=${rosenid}&binid=${binid}`, 'callback').toPromise();
   }
 
   /**
@@ -48,6 +44,11 @@ export class BusService {
     return this.http.jsonp<BusModel.Routes>(`${this.routeNumberApi}`, 'callback').toPromise();
   }
 
-    return this.http.jsonp<BusModel.Busstop[]>(`${this.busstopApi}`, 'callback').toPromise();
+  /**
+   * 路線ごとのバス停の座標データを取得する
+   * @param rosenid 路線ID
+   */
+  timeTable(rosenid: string): Promise<BusModel.Timetables> {
+    return this.http.jsonp<BusModel.Timetables>(`${this.timeTableApi}?rosenid=${rosenid}`, 'callback').toPromise();
   }
 }
