@@ -78,8 +78,9 @@ export class MapContainerComponent implements OnInit {
     const busstops = await this.busService.busstop(this.routeid);
 
     busstops.busstop.forEach(busstop => {
-      this.map.putBusstopMarker(busstop);
+      this.map.createBusstopMarker(busstop);
     });
+    this.map.putBusstopMarker();
   }
 
   async getTimeTable() {
@@ -106,13 +107,8 @@ export class MapContainerComponent implements OnInit {
 
   startBusLocation(binid: string) {
     setInterval(async () => {
-      // console.log(this.routeid);
-      // console.log(a[0].binid);
-
       const b = await this.busService.route(this.routeid, binid);
       const rosen = this.routes.rosen.find(r => r.id === b.rosenid);
-
-      // console.log(b && b.busid);
 
       if (b && b.busid) {
         const comment = `

@@ -8,6 +8,7 @@ export class LLMap {
   busstopMarker: {
     [busid: string]: L.Marker;
   } = {};
+  busstopMarkerGroup = L.featureGroup();
 
   initMap(elem: any) {
     const token =
@@ -39,7 +40,7 @@ export class LLMap {
           <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,
           Imagery © <a href="https://www.mapbox.com/">Mapbox</a>
         `,
-        maxZoom: 18,
+        maxZoom: 10,
         id: 'mapbox.satellite', // mapbox.streets | mapbox.satellite
         accessToken: 'your.mapbox.access.token',
       },
@@ -117,7 +118,7 @@ export class LLMap {
     });
   }
 
-  putBusstopMarker(busstop: {
+  createBusstopMarker(busstop: {
     id: string;
     name: string;
     latitude: number;
@@ -148,8 +149,16 @@ export class LLMap {
       icon,
       draggable: false,
     })
-      .addTo(this.llmap)
       .bindPopup(comment);
+
+    this.busstopMarkerGroup.addLayer(this.busstopMarker[`busstop${busstop.id}`]);
+  }
+
+  putBusstopMarker() {
+    this.busstopMarkerGroup.addTo(this.llmap);
+    this.llmap.fitBounds(this.busstopMarkerGroup.getBounds(), {
+      maxZoom: 16,
+    });
   }
 
   clearBusstopMarker() {
