@@ -9,9 +9,12 @@ import * as busModel from '../../../core/bus.model';
 })
 export class NavComponent {
   @Input() routes: busModel.Routes;
+  @Input() routeid: string;
   @Output() routeClick = new EventEmitter<string>();
 
   handleRouteClick(id: string) {
-    this.routeClick.emit(id);
+    if (id !== this.routeid) {
+      this.routeClick.emit(id);
+    }
   }
 }

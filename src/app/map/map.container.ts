@@ -11,6 +11,7 @@ import * as busModel from '../core/bus.model';
     <app-alert class="alert" [isRunning]="isRunning"></app-alert>
     <app-nav
       [routes]="routes"
+      [routeid]="routeid"
       class="nav"
       (routeClick)="handleRouteClick($event)"
     ></app-nav>

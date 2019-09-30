@@ -1,7 +1,9 @@
 <div>
   <ul>
-    <li class="route" *ngFor="let route of routes?.rosen" (click)="handleRouteClick(route.id)">
-      {{ route.name }}
-    </li>
+    <ng-container *ngFor="let route of routes?.rosen">
+      <li class="route" (click)="handleRouteClick(route.id)" [class.active]="route.id === routeid">
+        {{ route.name }}
+      </li>
+    </ng-container>
   </ul>
 </div>
