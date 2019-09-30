@@ -1,4 +1,5 @@
 import * as L from 'leaflet';
+import omnivore from 'leaflet-omnivore';
 
 export class LLMap {
   llmap!: L.Map;
@@ -9,6 +10,7 @@ export class LLMap {
     [busid: string]: L.Marker;
   } = {};
   busstopMarkerGroup = L.featureGroup();
+  polyline: any;
 
   initMap(elem: any) {
     const token =
@@ -60,6 +62,26 @@ export class LLMap {
         { position: 'bottomright' },
       )
       .addTo(this.llmap);
+  }
+
+  putPolyline(rosenid: string) {
+    const style = {
+      color: 'rgba(236,64,122,0.5)',
+      weight: 8,
+      opacity: 0.8,
+    };
+
+    const geoJson = L.geoJSON(null, {
+      style,
+    }).addTo(this.llmap);
+
+    this.polyline = omnivore.kml(`../../../assets/kml/${rosenid}.kml`, null, geoJson);
+  }
+
+  clearPolyline() {
+    if (this.polyline) {
+      this.llmap.removeLayer(this.polyline);
+    }
   }
 
   putMarker(marker: {

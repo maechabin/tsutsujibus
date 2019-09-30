@@ -83,14 +83,24 @@ export class MapContainerComponent implements OnInit {
   }
 
   async getBusstop() {
+    let routeid = '1';
     this.map.clearBusstopMarker();
     this.map.clearBusMarker();
+    this.map.clearPolyline();
     const busstops = await this.busService.busstop(this.routeid);
 
     busstops.busstop.forEach(busstop => {
       this.map.createBusstopMarker(busstop);
     });
     this.map.putBusstopMarker();
+
+
+    if (Number(this.routeid) > 11) {
+      routeid = (Number(this.routeid) - 7) + '';
+    } else {
+      routeid = this.routeid;
+    }
+    this.map.putPolyline(routeid);
   }
 
   async getTimeTable() {
