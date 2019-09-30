@@ -9,7 +9,7 @@ export class LLMap {
   busstopMarker: {
     [busid: string]: L.Marker;
   } = {};
-  busstopMarkerGroup = L.featureGroup();
+  busstopMarkerGroup: L.FeatureGroup;
   polyline: any;
 
   initMap(elem: any) {
@@ -172,11 +172,10 @@ export class LLMap {
       draggable: false,
     })
       .bindPopup(comment);
-
-    this.busstopMarkerGroup.addLayer(this.busstopMarker[`busstop${busstop.id}`]);
   }
 
   putBusstopMarker() {
+    this.busstopMarkerGroup = L.featureGroup(Object.values(this.busstopMarker));
     this.busstopMarkerGroup.addTo(this.llmap);
     this.llmap.fitBounds(this.busstopMarkerGroup.getBounds(), {
       maxZoom: 16,
@@ -186,6 +185,9 @@ export class LLMap {
   clearBusstopMarker() {
     Object.values(this.busstopMarker).forEach((marker) => {
       this.llmap.removeLayer(marker);
+    });
+    Object.keys(this.busstopMarker).forEach((key) => {
+      delete this.busstopMarker[key];
     });
   }
 
