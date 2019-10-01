@@ -3,6 +3,7 @@ import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { LLMap } from '../domains/llmap/llmap';
 import { BusService } from '../core/bus.service';
 import * as busModel from '../core/bus.model';
+import * as colors from '../core/colors';
 
 @Component({
   selector: 'app-map',
@@ -95,18 +96,17 @@ export class MapContainerComponent implements OnInit {
     this.map.clearPolyline();
     const busstops = await this.busService.busstop(this.routeid);
 
-    busstops.busstop.forEach(busstop => {
-      this.map.createBusstopMarker(busstop);
-    });
-    this.map.putBusstopMarker();
-
-
     if (Number(this.routeid) > 11) {
       routeid = (Number(this.routeid) - 7) + '';
     } else {
       routeid = this.routeid;
     }
-    this.map.putPolyline(routeid);
+
+    busstops.busstop.forEach(busstop => {
+      this.map.createBusstopMarker(busstop, colors[`Route${routeid}`].busstop);
+    });
+    this.map.putBusstopMarker();
+    this.map.putPolyline(routeid, colors[`Route${routeid}`].route);
   }
 
   async getTimeTable() {

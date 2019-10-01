@@ -64,9 +64,9 @@ export class LLMap {
       .addTo(this.llmap);
   }
 
-  putPolyline(rosenid: string) {
+  putPolyline(rosenid: string, color: string) {
     const style = {
-      color: 'rgba(236,64,122,0.5)',
+      color,
       weight: 8,
       opacity: 0.8,
     };
@@ -140,18 +140,21 @@ export class LLMap {
     });
   }
 
-  createBusstopMarker(busstop: {
-    id: string;
-    name: string;
-    latitude: number;
-    longitude: number;
-  }) {
+  createBusstopMarker(
+    busstop: {
+      id: string;
+      name: string;
+      latitude: number;
+      longitude: number;
+    },
+    color: string,
+  ) {
     /** Icon */
     const markerHtmlStyles1 = `
         position: absolute;
         left: -5px;
         top: -5px;
-        background-color: rgba(236,64,122,0.9);
+        background-color: ${color};
         width: 10px;
         height: 10px;
         z-index: 100;
