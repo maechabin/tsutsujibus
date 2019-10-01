@@ -1,3 +1,19 @@
+@mixin nav-color ($color, $rgba) {
+  border-left: 8px solid $color;
+  color: $color;
+  border-bottom: 1px solid $rgba;
+
+  &:hover {
+    background-color: $rgba;
+  }
+}
+
+@mixin nav-color-active($color) {
+  background-color: $color;
+  color: #fff;
+  cursor: default;
+}
+
 ul {
   list-style-type: nonte;
   margin: 0;
@@ -6,14 +22,113 @@ ul {
 }
 
 .route {
+  @include nav-color(#616161, rgba(97,97,97,0.6));
+  box-sizing: border-box;
   color: #424242;
   font-weight: bold;
   padding: 8px 16px;
-  border-bottom: 1px solid #ccc;
   cursor: pointer;
+
+  &:hover {
+    color: #fff;
+  }
+
+  &.active {
+    @include nav-color-active(#616161);
+  }
 }
 
-.active {
-  background-color: rgba(0,0,0,0.3);
-  cursor: default;
+.route1 {
+  @include nav-color(#f4511e, rgba(244,81,30,0.6));
+
+  &.active {
+    @include nav-color-active(#f4511e);
+  }
+}
+
+.route2 {
+  @include nav-color(#d81b60, rgba(216,27,96,0.6));
+
+  &.active {
+    @include nav-color-active(#d81b60);
+  }
+}
+
+.route3 {
+  @include nav-color(#009688, rgba(0,150,136,0.6));
+
+  &.active {
+    @include nav-color-active(#009688);
+  }
+}
+
+.route4 {
+  @include nav-color(#039be5, rgba(3,155,229,0.6));
+
+  &.active {
+    @include nav-color-active(#039be5);
+  }
+}
+
+.route5,
+.route12 {
+  @include nav-color(#1565c0, rgba(21,101,192,0.6));
+
+  &.active {
+    @include nav-color-active(#1565c0);
+  }
+}
+
+.route6,
+.route13 {
+  @include nav-color(#689f38, rgba(104,159,56,0.6));
+
+  &.active {
+    @include nav-color-active(#689f38);
+  }
+}
+
+.route7,
+.route14 {
+  @include nav-color(#ef6c00, rgba(239,108,0,0.6));
+
+  &.active {
+    @include nav-color-active(#ef6c00);
+  }
+}
+
+.route8,
+.route15 {
+  @include nav-color(#ff4081, rgba(255,64,129,0.6));
+
+  &.active {
+    @include nav-color-active(#ff4081);
+  }
+}
+
+.route9,
+.route16 {
+  @include nav-color(#673ab7, rgba(103,58,183,0.6));
+
+  &.active {
+    @include nav-color-active(#673ab7);
+  }
+}
+
+.route10,
+.route17 {
+  @include nav-color(#a1887f, rgba(161,136,127,0.6));
+
+  &.active {
+    @include nav-color-active(#a1887f);
+  }
+}
+
+.route11,
+.route18 {
+  @include nav-color(#ab47bc, rgba(171,71,188,0.6));
+
+  &.active {
+    @include nav-color-active(#ab47bc);
+  }
 }
