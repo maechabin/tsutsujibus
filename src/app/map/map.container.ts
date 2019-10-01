@@ -8,21 +8,45 @@ import * as colors from '../core/colors';
 @Component({
   selector: 'app-map',
   template: `
-  <div class="app">
-    <app-alert class="alert" [isRunning]="isRunning"></app-alert>
-    <app-nav
-      [routes]="routes"
-      [routeid]="routeid"
-      class="nav"
-      (routeClick)="handleRouteClick($event)"
-    ></app-nav>
-    <div class="map"></div>
-  </div>
+    <app-header class="header"></app-header>
+    <div class="app">
+      <app-nav
+        [routes]="routes"
+        [routeid]="routeid"
+        class="nav"
+        (routeClick)="handleRouteClick($event)"
+      ></app-nav>
+      <div class="map-wrapper">
+        <app-alert class="alert" [isRunning]="isRunning"></app-alert>
+        <div class="map"></div>
+      </div>
+    </div>
   `,
   styles: [
     `
+      .header {
+        height: 40px;
+      }
+
       .app {
         display: flex;
+      }
+
+      .nav {
+        width: 266px;
+        height: calc(100vh - 40px);
+        overflow: scroll;
+      }
+
+      .map-wrapper {
+        position: relative;
+        width: calc(100% - 266px);
+        height: calc(100vh - 40px);
+      }
+
+      .map {
+        width: 100%;
+        height: 100%;
       }
 
       .alert {
@@ -30,17 +54,6 @@ import * as colors from '../core/colors';
         z-index: 10000;
         left: calc(50% - 220px);
         right: calc(50% - 220px);
-      }
-
-      .map {
-        width: calc(100% - 320px);
-        height: 100vh;
-      }
-
-      .nav {
-        width: 320px;
-        height: 100vh;
-        overflow: scroll;
       }
     `,
   ],
