@@ -152,19 +152,29 @@ export class LLMap {
     /** Icon */
     const markerHtmlStyles1 = `
         position: absolute;
-        left: -5px;
-        top: -5px;
+        left: -6px;
+        top: -6px;
+        border-radius: 50%;
         background-color: ${color};
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         z-index: 100;
+      `;
+    const markerHtmlStyles2 = `
+        position: absolute;
+        left: 5px;
+        bottom: -24px;
+        width: 2px;
+        height: 24px;
+        background-color: ${color};
       `;
     const icon = L.divIcon({
       className: 'busstop-icon',
-      iconAnchor: [0, 0],
-      popupAnchor: [0, 0],
+      iconAnchor: [0, 30],
+      popupAnchor: [0, -30],
       html: `
           <span style="${markerHtmlStyles1}" />
+          <span style="${markerHtmlStyles2}" />
         `,
     });
 
