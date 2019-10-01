@@ -115,6 +115,10 @@ export class MapContainerComponent implements OnInit {
     this.runningTimetables = this.getRunningTimetables();
     if (this.runningTimetables.length > 0) {
       this.getRunningTimetables().forEach(timetable => {
+        // this.map.llmap.on('zoomend', () => {
+        //   this.map.clearBusMarker();
+        //   this.startBusLocation(timetable.binid);
+        // });
         this.startBusLocation(timetable.binid);
       });
     } else {
@@ -136,25 +140,28 @@ export class MapContainerComponent implements OnInit {
   }
 
   startBusLocation(binid: string) {
-    setInterval(async () => {
-      const b = await this.busService.route(this.routeid, binid);
-      const rosen = this.routes.rosen.find(r => r.id === b.rosenid);
+    this.locateBus(binid);
+    setInterval(() => this.locateBus(binid), 5000);
+  }
 
-      if (b && b.busid) {
-        const comment = `
-        <div>
-          <p>${rosen.name}</p>
-          <p>行き先: ${b.destination}</p>
-        </div>
-      `;
+  private async locateBus(binid: string) {
+    const b = await this.busService.route(this.routeid, binid);
+    const rosen = this.routes.rosen.find(r => r.id === b.rosenid);
 
-        this.map.updateMarkerLatLng({
-          busid: b.busid,
-          lat: b.latitude,
-          lng: b.longitude,
-          comment,
-        });
-      }
-    }, 5000);
+    if (b && b.busid) {
+      const comment = `
+      <div>
+        <p>${rosen.name}</p>
+        <p>行き先: ${b.destination}</p>
+      </div>
+    `;
+
+      this.map.updateMarkerLatLng({
+        busid: b.busid,
+        lat: b.latitude,
+        lng: b.longitude,
+        comment,
+      });
+    }
   }
 }
