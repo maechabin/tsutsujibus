@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 
 import { LLMap } from '../domains/llmap/llmap';
 import { BusService } from '../core/bus.service';
@@ -53,6 +53,16 @@ export class MapContainerComponent implements OnInit {
   runningTimetables: busModel.Timetable[] = [];
   isRunning = true;
 
+  @HostListener('window:focus', ['$event'])
+  onFocus(event: FocusEvent): void {
+    this.getTimeTable();
+  }
+
+  @HostListener('window:blur', ['$event'])
+  onBlur(event: FocusEvent): void {
+    this.map.clearBusMarker();
+  }
+
   constructor(private elementRef: ElementRef, private busService: BusService) { }
 
   async ngOnInit() {
@@ -65,14 +75,10 @@ export class MapContainerComponent implements OnInit {
 
     this.routes = await this.busService.routes();
 
-    // const route = await this.busService.route();
-    const bus = await this.busService.bus();
-
-    // this.map.putMarker({
-    //   busid: bus.busid,
-    //   lat: bus.latitude,
-    //   lng: bus.longitude,
-    // });
+    this.map.llmap.on('zoomend', () => {
+      // this.map.clearBusMarker();
+      // this.getTimeTable();
+    });
   }
 
   handleRouteClick(routeid: string) {
