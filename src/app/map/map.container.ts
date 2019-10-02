@@ -78,17 +78,19 @@ export class MapContainerComponent implements OnInit {
     this.map.clearBusMarker();
   }
 
-  constructor(private elementRef: ElementRef, private busService: BusService) { }
+  constructor(
+    private elementRef: ElementRef,
+    private busService: BusService,
+    private spinnerService: SpinnerService,
+  ) { }
 
   async ngOnInit() {
     this.el = this.elementRef.nativeElement;
     const mapElem = this.el.querySelector('.map') as HTMLElement;
     this.map.initMap(mapElem);
-
-    this.getBusstop();
-    this.getTimeTable();
-
     this.routes = await this.busService.routes();
+
+    this.initRoute(this.routeid);
 
     this.map.llmap.on('zoomend', () => {
       // this.map.clearBusMarker();
@@ -96,11 +98,21 @@ export class MapContainerComponent implements OnInit {
     });
   }
 
-  handleRouteClick(routeid: string) {
+  initRoute(routeid: string = '1') {
+    this.spinnerService.startSpinner();
     this.isRunning = true;
     this.routeid = routeid;
-    this.getBusstop();
-    this.getTimeTable();
+    Promise.all([
+      this.getBusstop(),
+      this.getTimeTable(),
+    ]).then((result) => {
+      this.spinnerService.stopSpinner();
+      this.isRunning = result[1];
+    });
+  }
+
+  handleRouteClick(routeid: string) {
+    this.initRoute(routeid);
   }
 
   async getBusstop() {
@@ -134,9 +146,10 @@ export class MapContainerComponent implements OnInit {
         //   this.startBusLocation(timetable.binid);
         // });
         this.startBusLocation(timetable.binid);
+        return Promise.resolve(false);
       });
     } else {
-      this.isRunning = false;
+      return Promise.resolve(false);
     }
   }
 
