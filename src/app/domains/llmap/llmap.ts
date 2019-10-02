@@ -92,21 +92,19 @@ export class LLMap {
     /** Icon */
     const markerHtmlStyles = `
       position: absolute;
-      width: 28px;
-      height: 28px;
-      line-height: 28px;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
       text-align: center;
       color: #fff;
       font-weight: bold;
-      box-shadow: 0 0 0 8px rgba(236,64,122,0.5);
       border-radius: 50%;
       border: 2px solid #fff;
-      background-color: rgba(236,64,122,1);
-      z-index: 10000;
+      background-color: rgba(215,1,112,0.9);
     `;
     const icon = L.divIcon({
       className: 'marker-icon',
-      iconAnchor: [16, 16],
+      iconAnchor: [14, 14],
       popupAnchor: [0, 0],
       html: `
         <span style="${markerHtmlStyles}">${marker.busid}</span>
@@ -128,6 +126,7 @@ export class LLMap {
       icon,
       draggable: false,
     })
+      .setZIndexOffset(1000)
       .addTo(this.llmap).bindPopup('');
   }
 
@@ -158,7 +157,6 @@ export class LLMap {
         background-color: ${color};
         width: 12px;
         height: 12px;
-        z-index: 100;
       `;
     const markerHtmlStyles2 = `
         position: absolute;

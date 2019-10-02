@@ -1,13 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
 
-.marker-icon {      
+.marker-icon {
   transition: 5s linear;
+  animation: pulsate 1.2s ease-out;
+  animation-iteration-count: infinite; 
 }
 
 @keyframes pulsate {
-      0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
-      50% {opacity: 1.0;}
-      100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0;}
+      0% {
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        box-shadow: 0 0 0 4px rgba(215,1,112,0.8);
+      }
+
+      50% {
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        box-shadow: 0 0 0 4px rgba(215,1,112,0.4);
+      }
+
+      100% {
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        box-shadow: 0 0 0 4px rgba(215,1,112,0.2);
+      }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
