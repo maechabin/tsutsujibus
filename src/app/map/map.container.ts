@@ -66,6 +66,7 @@ export class MapContainerComponent implements OnInit {
   timetables: busModel.Timetable[] = [];
   runningTimetables: busModel.Timetable[] = [];
   isRunning = true;
+  timer: any;
 
   @HostListener('window:focus', ['$event'])
   onFocus(event: FocusEvent): void {
@@ -153,8 +154,9 @@ export class MapContainerComponent implements OnInit {
   }
 
   startBusLocation(binid: string) {
+    clearInterval(this.timer);
     this.locateBus(binid);
-    setInterval(() => this.locateBus(binid), 5000);
+    this.timer = setInterval(() => this.locateBus(binid), 5000);
   }
 
   private async locateBus(binid: string) {
