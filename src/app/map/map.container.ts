@@ -1,62 +1,17 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { MatSidenav } from '@angular/material';
 
 import { LLMap } from '../domains/llmap/llmap';
 import { BusService } from '../core/bus.service';
+import { SpinnerService } from '../core/spinner.service';
 import * as busModel from '../core/bus.model';
 import * as colors from '../core/colors';
 
 @Component({
   selector: 'app-map',
-  template: `
-    <app-header class="header"></app-header>
-    <div class="app">
-      <app-nav
-        [routes]="routes"
-        [routeid]="routeid"
-        class="nav"
-        (routeClick)="handleRouteClick($event)"
-      ></app-nav>
-      <div class="map-wrapper">
-        <app-alert class="alert" [isRunning]="isRunning"></app-alert>
-        <div class="map"></div>
-      </div>
-    </div>
-  `,
-  styles: [
-    `
-      .header {
-        height: 40px;
-      }
-
-      .app {
-        display: flex;
-      }
-
-      .nav {
-        width: 266px;
-        height: calc(100vh - 40px);
-        overflow: scroll;
-      }
-
-      .map-wrapper {
-        position: relative;
-        width: calc(100% - 266px);
-        height: calc(100vh - 40px);
-      }
-
-      .map {
-        width: 100%;
-        height: 100%;
-      }
-
-      .alert {
-        position: absolute;
-        z-index: 10000;
-        left: calc(50% - 220px);
-        right: calc(50% - 220px);
-      }
-    `,
-  ],
+  templateUrl: './map.container.html',
+  styleUrls: ['./map.container.scss'],
 })
 export class MapContainerComponent implements OnInit {
   private el: HTMLElement;
@@ -67,6 +22,9 @@ export class MapContainerComponent implements OnInit {
   runningTimetables: busModel.Timetable[] = [];
   isRunning = true;
   timer: any;
+  readonly mobileQuery: MediaQueryList = this.media.matchMedia('(max-width: 720px)');
+
+  @ViewChild('sidenav', { static: false }) private readonly sidenav: MatSidenav;
 
   @HostListener('window:focus', ['$event'])
   onFocus(event: FocusEvent): void {
@@ -82,20 +40,24 @@ export class MapContainerComponent implements OnInit {
     private elementRef: ElementRef,
     private busService: BusService,
     private spinnerService: SpinnerService,
+    private media: MediaMatcher,
   ) { }
 
   async ngOnInit() {
-    this.el = this.elementRef.nativeElement;
-    const mapElem = this.el.querySelector('.map') as HTMLElement;
-    this.map.initMap(mapElem);
     this.routes = await this.busService.routes();
-
+    this.initMap();
     this.initRoute(this.routeid);
 
     this.map.llmap.on('zoomend', () => {
       // this.map.clearBusMarker();
       // this.getTimeTable();
     });
+  }
+
+  initMap() {
+    this.el = this.elementRef.nativeElement;
+    const mapElem = this.el.querySelector('.map') as HTMLElement;
+    this.map.initMap(mapElem);
   }
 
   initRoute(routeid: string = '1') {
@@ -106,13 +68,23 @@ export class MapContainerComponent implements OnInit {
       this.getBusstop(),
       this.getTimeTable(),
     ]).then((result) => {
-      this.spinnerService.stopSpinner();
       this.isRunning = result[1];
+    }).catch(() => {
+      this.isRunning = false;
+    }).finally(() => {
+      if (this.mobileQuery.matches) {
+        this.sidenav.close();
+      }
+      this.spinnerService.stopSpinner();
     });
   }
 
   handleRouteClick(routeid: string) {
     this.initRoute(routeid);
+  }
+
+  handleMenuClick() {
+    this.sidenav.toggle();
   }
 
   async getBusstop() {

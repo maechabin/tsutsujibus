@@ -1,3 +1,6 @@
-<header class="header">
+<mat-toolbar class="header">
+  <button *ngIf="idDisplay" class="icon" mat-icon-button (click)="handleMenuClick()">
+    <mat-icon>menu</mat-icon>
+  </button>
   <h1>鯖江市つつじバス 路線図</h1>
-</header>
+</mat-toolbar>
