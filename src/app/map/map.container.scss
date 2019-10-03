@@ -14,6 +14,11 @@
   overflow: scroll;
 }
 
+.nav-mobile {
+  margin-top: 40px;
+  height: calc(100% - 40px);
+}
+
 .map-wrapper {
   position: relative;
   width: calc(100% - 266px);

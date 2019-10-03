@@ -2,7 +2,7 @@
 
 <mat-sidenav-container class="content">
   <mat-sidenav class="nav" #sidenav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="!mobileQuery.matches"
-    [disableClose]="false" [fixedInViewport]="mobileQuery.matches" [style.marginTop.px]="mobileQuery.matches ? 40 : 0">
+    [autoFocus]="false" [fixedInViewport]="mobileQuery.matches" [class.nav-mobile]="mobileQuery.matches">
     <app-nav [routes]="routes" [routeid]="routeid" (routeClick)="handleRouteClick($event)"></app-nav>
   </mat-sidenav>
 

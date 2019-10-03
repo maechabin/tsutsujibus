@@ -21,6 +21,11 @@ ul {
   width: 100%;
 }
 
+.note {
+  font-size: 12px;
+  padding: 16px;
+}
+
 .route {
   @include nav-color(#616161, rgba(97,97,97,0.6));
   box-sizing: border-box;
