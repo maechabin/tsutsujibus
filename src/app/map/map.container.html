@@ -1,16 +1,13 @@
 <app-header class="header" [idDisplay]="mobileQuery.matches" (menuClick)="handleMenuClick()"></app-header>
 
-<div class="app">
-  <mat-sidenav-container>
-    <mat-sidenav class="nav" #sidenav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="!mobileQuery.matches"
-      [disableClose]="false" [fixedInViewport]="mobileQuery.matches"
-      [style.marginTop.px]="mobileQuery.matches ? 40 : 0">
-      <app-nav [routes]="routes" [routeid]="routeid" (routeClick)="handleRouteClick($event)"></app-nav>
-    </mat-sidenav>
+<mat-sidenav-container class="content">
+  <mat-sidenav class="nav" #sidenav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="!mobileQuery.matches"
+    [disableClose]="false" [fixedInViewport]="mobileQuery.matches" [style.marginTop.px]="mobileQuery.matches ? 40 : 0">
+    <app-nav [routes]="routes" [routeid]="routeid" (routeClick)="handleRouteClick($event)"></app-nav>
+  </mat-sidenav>
 
-    <mat-sidenav-content class="map-wrapper" [class.map-wrapper-mobile]="mobileQuery.matches">
-      <app-alert class="alert" [isRunning]="isRunning"></app-alert>
-      <div class="map"></div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</div>
+  <mat-sidenav-content class="map-wrapper" [class.map-wrapper-mobile]="mobileQuery.matches">
+    <app-alert class="alert" [isRunning]="isRunning"></app-alert>
+    <div class="map"></div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

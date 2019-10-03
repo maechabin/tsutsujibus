@@ -2,21 +2,22 @@
   height: 40px;
 }
 
-.app {
+.content {
   display: flex;
   flex-direction: column;
+  height: calc(100% - 40px);
 }
 
 .nav {
   width: 266px;
-  height: calc(100vh - 40px);
+  height: 100%;
   overflow: scroll;
 }
 
 .map-wrapper {
   position: relative;
   width: calc(100% - 266px);
-  height: calc(100vh - 40px);
+  height: 100%;
 }
 
 .map-wrapper-mobile {
@@ -35,4 +36,6 @@
   right: calc(50% - 220px);
 }
 
-.mat-drawer-container{ overflow: visible; }
+.mat-drawer-container{
+  overflow: visible;
+}
