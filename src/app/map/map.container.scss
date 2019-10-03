@@ -27,6 +27,7 @@
 
 .map-wrapper-mobile {
   width: 100%;
+  overflow: hidden;
 }
 
 .map {
@@ -37,8 +38,8 @@
 .alert {
   position: absolute;
   z-index: 1000;
-  left: calc(50% - 220px);
-  right: calc(50% - 220px);
+  left: calc(50% - 200px);
+  right: calc(50% - 200px);
 }
 
 .mat-drawer-container{
