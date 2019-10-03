@@ -1,4 +1,5 @@
 import * as L from 'leaflet';
+import 'leaflet.gridlayer.googlemutant';
 import omnivore from 'leaflet-omnivore';
 
 export class LLMap {
@@ -42,11 +43,15 @@ export class LLMap {
           <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,
           <a href="https://www.mapbox.com/">Mapbox</a>
         `,
-        maxZoom: 10,
+        maxZoom: 18,
         id: 'mapbox.satellite', // mapbox.streets | mapbox.satellite
         accessToken: 'your.mapbox.access.token',
       },
     );
+
+    const googlemaps = L.gridLayer.googleMutant({
+      type: 'roadmap', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+    });
 
     this.llmap = L.map(elem)
       .setView([35.957151, 136.223857], 14)
@@ -55,8 +60,9 @@ export class LLMap {
     L.control
       .layers(
         {
-          street: streetsLayer,
-          satellite: satelliteLayer,
+          Street: streetsLayer,
+          Satellite: satelliteLayer,
+          'Google Maps': googlemaps,
         },
         {},
         { position: 'bottomright' },
