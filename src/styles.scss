@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-.marker-icon {
+.marker-icon-active {
   transition: 5s linear;
   animation: pulsate 1.2s ease-out;
   animation-iteration-count: infinite; 
@@ -15,26 +15,26 @@
 }
 
 @keyframes pulsate {
-      0% {
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        box-shadow: 0 0 0 4px rgba(215,1,112,0.8);
-      }
+  0% {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 0 0 4px rgba(215,1,112,0.8);
+  }
 
-      50% {
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        box-shadow: 0 0 0 4px rgba(215,1,112,0.4);
-      }
+  50% {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 0 0 4px rgba(215,1,112,0.4);
+  }
 
-      100% {
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        box-shadow: 0 0 0 4px rgba(215,1,112,0.2);
-      }
+  100% {
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    box-shadow: 0 0 0 4px rgba(215,1,112,0.2);
+  }
 }
 
 html,

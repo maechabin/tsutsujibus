@@ -90,11 +90,7 @@ export class LLMap {
     }
   }
 
-  putMarker(marker: {
-    busid: string;
-    lat: number;
-    lng: number;
-  }) {
+  createIcon(busid: string, className: string = 'marker-icon') {
     /** Icon */
     const markerHtmlStyles = `
       position: absolute;
@@ -108,14 +104,22 @@ export class LLMap {
       border: 2px solid #fff;
       background-color: rgba(215,1,112,0.9);
     `;
-    const icon = L.divIcon({
-      className: 'marker-icon',
+    return L.divIcon({
+      className,
       iconAnchor: [14, 14],
-      popupAnchor: [0, 0],
+      popupAnchor: [0, -8],
       html: `
-        <span style="${markerHtmlStyles}">${marker.busid}</span>
-      `,
+          <span style="${markerHtmlStyles}">${busid}</span>
+        `,
     });
+  }
+
+  putMarker(marker: {
+    busid: string;
+    lat: number;
+    lng: number;
+  }) {
+
 
     // const comment = `
     // <p style="font-size: 14px;">
@@ -129,7 +133,7 @@ export class LLMap {
     // `;
 
     this.busMarker[`bus${marker.busid}`] = L.marker([marker.lat, marker.lng], {
-      icon,
+      icon: this.createIcon(marker.busid),
       draggable: false,
     })
       .setZIndexOffset(1000)
@@ -217,14 +221,15 @@ export class LLMap {
     lng: number;
     comment: string;
   }) {
-    console.log(marker.busid);
     const newLatLng = new L.LatLng(marker.lat, marker.lng);
 
     if (!this.busMarker[`bus${marker.busid}`]) {
       this.putMarker(marker);
     }
 
-    this.busMarker[`bus${marker.busid}`].setLatLng(newLatLng);
+    this.busMarker[`bus${marker.busid}`]
+      .setIcon(this.createIcon(marker.busid, 'marker-icon-active'))
+      .setLatLng(newLatLng)
       .setPopupContent(marker.comment);
   }
 }
