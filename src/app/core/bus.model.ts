@@ -1,14 +1,25 @@
 export interface Bus {
+  /** 便番号 */
   binid: string; // "4"
+  /** バス番号 */
   busid: string; // "3"
+  /** バスからの送信日時 YYYYMMDDhhmmss */
   datetime: string; // "20190928154437"
+  /** 行き先 */
   destination: string; // "公立丹南病院"
+  /** 方位（度）　例 0：北 90：東 180：南 270：西 */
   direction: number; // 206
+  /** true：運行中 false：運行以外 */
   isRunning: boolean; // true
+  /** true:遅れ false：正常 */
   isdelay: boolean; // false
+  /** 緯度 */
   latitude: number; // 35.978236
+  /** 軽度 */
   longitude: number; // 136.182721
+  /** 路線番号 */
   rosenid: string; // "4"
+  /** 速度（m/秒） */
   speed: number; // 0
 }
 

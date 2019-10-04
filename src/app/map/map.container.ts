@@ -146,22 +146,50 @@ export class MapContainerComponent implements OnInit {
 
   private async locateBus(binid: string) {
     const b = await this.busService.route(this.routeid, binid);
-    const rosen = this.routes.rosen.find(r => r.id === b.rosenid);
 
     if (b && b.busid) {
-      const comment = `
-      <div>
-        <p>${rosen.name}</p>
-        <p>行き先: ${b.destination}</p>
-      </div>
-    `;
-
       this.map.updateMarkerLatLng({
         busid: b.busid,
         lat: b.latitude,
         lng: b.longitude,
-        comment,
+        comment: this.createBusComment(b),
       });
+
+      this.isRunning = true;
     }
+  }
+
+  private createBusComment(businfo: busModel.Bus) {
+    let routeid = '1';
+    if (Number(this.routeid) > 11) {
+      routeid = (Number(this.routeid) - 7) + '';
+    } else {
+      routeid = this.routeid;
+    }
+
+    const rosen = this.routes.rosen.find(r => r.id === businfo.rosenid);
+    const runningState = businfo.isdelay ? '遅れています' : '正常通り運行中です';
+    const speed = `${Math.round(businfo.speed * 60 / 1000)}km/分`;
+    const style = {
+      name: `
+        text-align: center;
+        margin: 0 0 8px 0;
+        padding-bottom: 2px;
+        border-bottom: 2px solid ${colors[`Route${routeid}`].busstop};
+      `,
+      info: `
+        margin: 0;
+        text-align: center;
+      `
+    };
+
+    return `
+      <div>
+        <p style="${style.name}"><strong>${rosen.name}${businfo.busid}番バス ${businfo.destination}行き</strong></p>
+
+        <p style="${style.info}">「${runningState}」</p>
+        <p style="${style.info}">${speed}</p>
+      </div>
+    `;
   }
 }

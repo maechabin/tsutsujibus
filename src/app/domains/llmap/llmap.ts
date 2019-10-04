@@ -133,7 +133,10 @@ export class LLMap {
       draggable: false,
     })
       .setZIndexOffset(1000)
-      .addTo(this.llmap).bindPopup('');
+      .addTo(this.llmap).bindPopup('', {
+        className: 'comment',
+        autoClose: false,
+      });
   }
 
   clearBusMarker() {
@@ -222,6 +225,6 @@ export class LLMap {
     }
 
     this.busMarker[`bus${marker.busid}`].setLatLng(newLatLng);
-    // .setPopupContent(marker.comment).openPopup();
+      .setPopupContent(marker.comment);
   }
 }
