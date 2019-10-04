@@ -118,7 +118,7 @@ export class MapContainerComponent implements OnInit {
         //   this.startBusLocation(timetable.binid);
         // });
         this.startBusLocation(timetable.binid);
-        return Promise.resolve(false);
+        return Promise.resolve(true);
       });
     } else {
       return Promise.resolve(false);
