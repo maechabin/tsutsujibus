@@ -59,15 +59,19 @@ export class MapService {
     const timeTable = await this.busService.timeTable(this.selectedRouteid);
     this.timetables = timeTable.timetable;
     this.runningTimetables = this.getRunningTimetables();
+
     if (this.runningTimetables.length > 0) {
-      this.getRunningTimetables().forEach(timetable => {
-        // this.map.llmap.on('zoomend', () => {
-        //   this.map.clearBusMarker();
-        //   this.startBusLocation(timetable.binid);
-        // });
-        this.startBusLocation(timetable.binid);
-        return Promise.resolve(true);
-      });
+      const runningBusTimetables = await Promise.all(
+        this.runningTimetables.filter(async (timetable: busModel.Timetable) => {
+          // this.map.llmap.on('zoomend', () => {
+          //   this.map.clearBusMarker();
+          //   this.startBusLocation(timetable.binid);
+          // });
+          return await this.startBusLocation(timetable.binid);
+        }),
+      );
+      console.log(runningBusTimetables.length > 0);
+      return Promise.resolve(runningBusTimetables.length > 0);
     } else {
       return Promise.resolve(false);
     }
@@ -116,25 +120,32 @@ export class MapService {
     });
   }
 
-  private startBusLocation(binid: string) {
+  private async startBusLocation(binid: string): Promise<boolean> {
     clearInterval(this.timer);
-    this.locateBus(binid);
-    this.timer = setInterval(() => this.locateBus(binid), 5000);
+    const isRunning = await this.locateBus(binid);
+
+    if (isRunning) {
+      this.timer = setInterval(() => {
+        this.locateBus(binid);
+      }, 5000);
+    }
+
+    return Promise.resolve(isRunning);
   }
 
-  private async locateBus(binid: string) {
-    const b = await this.busService.route(this.selectedRouteid, binid);
+  private async locateBus(binid: string): Promise<boolean> {
+    const runningBus = await this.busService.route(this.selectedRouteid, binid);
 
-    if (b && b.busid) {
+    if (runningBus && runningBus.busid) {
       this.map.updateMarkerLatLng({
-        busid: b.busid,
-        lat: b.latitude,
-        lng: b.longitude,
-        comment: this.createBusComment(b),
+        busid: runningBus.busid,
+        lat: runningBus.latitude,
+        lng: runningBus.longitude,
+        comment: this.createBusComment(runningBus),
       });
-
-      this.isRunning = true;
     }
+
+    return Promise.resolve(!!runningBus);
   }
 
   private createBusComment(businfo: busModel.Bus) {
