@@ -1,12 +1,30 @@
-<app-header class="header" [idDisplay]="mobileQuery.matches" (menuClick)="handleMenuClick()"></app-header>
+<app-header
+  class="header"
+  [idDisplay]="mobileQuery.matches"
+  (menuClick)="handleMenuClick()"
+></app-header>
 
 <mat-sidenav-container class="content">
-  <mat-sidenav class="nav" #sidenav [mode]="mobileQuery.matches ? 'over' : 'side'" [opened]="!mobileQuery.matches"
-    [autoFocus]="false" [fixedInViewport]="mobileQuery.matches" [class.nav-mobile]="mobileQuery.matches">
-    <app-nav [routes]="routes" [routeid]="routeid" (routeClick)="handleRouteClick($event)"></app-nav>
+  <mat-sidenav
+    class="nav"
+    #sidenav
+    [mode]="mobileQuery.matches ? 'over' : 'side'"
+    [opened]="!mobileQuery.matches"
+    [autoFocus]="false"
+    [fixedInViewport]="mobileQuery.matches"
+    [class.nav-mobile]="mobileQuery.matches"
+  >
+    <app-nav
+      [routes]="routes"
+      [routeid]="selectedRouteid"
+      (routeClick)="handleRouteClick($event)"
+    ></app-nav>
   </mat-sidenav>
 
-  <mat-sidenav-content class="map-wrapper" [class.map-wrapper-mobile]="mobileQuery.matches">
+  <mat-sidenav-content
+    class="map-wrapper"
+    [class.map-wrapper-mobile]="mobileQuery.matches"
+  >
     <app-alert class="alert" [isRunning]="isRunning"></app-alert>
     <div class="map"></div>
   </mat-sidenav-content>
