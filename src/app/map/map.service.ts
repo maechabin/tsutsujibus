@@ -76,8 +76,14 @@ export class MapService {
       });
   }
 
-  async setRoutes() {
-    this.routes = await this.busService.routes();
+  restart() {
+    this.getTimeTable()
+      .then(result => {
+        this.isRunning = result;
+      })
+      .catch(() => {
+        this.isRunning = false;
+      });
   }
 
   async getTimeTable(): Promise<boolean> {

@@ -25,7 +25,7 @@ export class MapContainerComponent implements OnInit {
 
   @HostListener('window:focus', ['$event'])
   onFocus(event: FocusEvent): void {
-    this.mapService.getTimeTable();
+    this.mapService.restart();
   }
 
   @HostListener('window:blur', ['$event'])
