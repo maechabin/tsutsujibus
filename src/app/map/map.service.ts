@@ -80,14 +80,14 @@ export class MapService {
     this.routes = await this.busService.routes();
   }
 
-  async getTimeTable() {
+  async getTimeTable(): Promise<boolean> {
     const timeTable = await this.busService.timeTable(this.selectedRouteid);
     this.timetables = timeTable.timetable;
     this.runningTimetables = this.getRunningTimetables();
 
     if (this.runningTimetables.length > 0) {
       const runningBusTimetables = await Promise.all(
-        this.runningTimetables.filter(async (timetable: busModel.Timetable) => {
+        this.runningTimetables.map(async (timetable: busModel.Timetable) => {
           // this.map.llmap.on('zoomend', () => {
           //   this.map.clearBusMarker();
           //   this.startBusLocation(timetable.binid);
@@ -95,8 +95,11 @@ export class MapService {
           return await this.startBusLocation(timetable.binid);
         }),
       );
-      console.log(runningBusTimetables.length > 0);
-      return Promise.resolve(runningBusTimetables.length > 0);
+      const areRunning =
+        runningBusTimetables.filter((isRunning: boolean) => isRunning === true)
+          .length > 0;
+
+      return Promise.resolve(areRunning);
     } else {
       return Promise.resolve(false);
     }
@@ -170,7 +173,7 @@ export class MapService {
       });
     }
 
-    return Promise.resolve(!!runningBus);
+    return Promise.resolve(!!(runningBus && runningBus.busid));
   }
 
   private createBusComment(businfo: busModel.Bus) {
@@ -196,7 +199,6 @@ export class MapService {
     return `
       <div>
         <p style="${style.name}"><strong>${rosen.name}${businfo.busid}番バス ${businfo.destination}行き</strong></p>
-
         <p style="${style.info}">「${runningState}」</p>
         <p style="${style.info}">${speed}</p>
       </div>
