@@ -40,12 +40,8 @@ export class MapContainerComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.mapService.setRoutes();
     this.initMap();
-    await this.mapService.initRoute();
-    if (this.mobileQuery.matches) {
-      this.sidenav.close();
-    }
+    this.initRoute();
 
     // this.mapService.map.llmap.on('zoomend', () => {
     //   this.mapService.clearBusMarker();
@@ -53,20 +49,26 @@ export class MapContainerComponent implements OnInit {
     // });
   }
 
-  initMap() {
-    this.el = this.elementRef.nativeElement;
-    const mapElem = this.el.querySelector('.map') as HTMLElement;
-    this.mapService.initMap(mapElem);
+  /** 路線を洗濯した時の処理 */
+  handleRouteClick(routeid: string) {
+    this.initRoute(routeid);
   }
 
-  async handleRouteClick(routeid: string) {
+  /** ヘッダーのハンバーガーメニューをクリックした時の処理 */
+  handleMenuClick() {
+    this.sidenav.toggle();
+  }
+
+  private initMap() {
+    this.el = this.elementRef.nativeElement;
+    const mapElem = this.el.querySelector('.map') as HTMLElement;
+    this.mapService.init(mapElem);
+  }
+
+  private async initRoute(routeid?: string) {
     await this.mapService.initRoute(routeid);
     if (this.mobileQuery.matches) {
       this.sidenav.close();
     }
-  }
-
-  handleMenuClick() {
-    this.sidenav.toggle();
   }
 }

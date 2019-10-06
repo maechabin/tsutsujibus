@@ -56,7 +56,8 @@ export class MapService {
     this.map = new LLMap();
   }
 
-  initMap(mapElement: HTMLElement) {
+  async init(mapElement: HTMLElement) {
+    this.routes = await this.busService.routes();
     this.map.initMap(mapElement);
   }
 
