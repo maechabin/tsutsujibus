@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { CustomMaterialModule } from '../core/custom-material.module';
 import { MapContainerComponent } from './map.container';
@@ -8,8 +8,13 @@ import { NavComponent } from './components/nav/nav.component';
 import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
-  imports: [CommonModule, CustomMaterialModule],
-  declarations: [MapContainerComponent, HeaderComponent, NavComponent, AlertComponent],
+  imports: [BrowserModule, CustomMaterialModule],
+  declarations: [
+    MapContainerComponent,
+    HeaderComponent,
+    NavComponent,
+    AlertComponent,
+  ],
   exports: [MapContainerComponent],
 })
-export class MapModule { }
+export class MapModule {}

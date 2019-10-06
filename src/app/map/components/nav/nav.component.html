@@ -1,10 +1,13 @@
 <div>
   <ul>
-    <ng-container *ngFor="let route of routes?.rosen">
-      <li class="route route{{route.id}}" (click)="handleRouteClick(route.id)" [class.active]="route.id === routeid">
-        {{ route.name }}
-      </li>
-    </ng-container>
+    <li
+      *ngFor="let route of routes?.rosen"
+      class="route route{{ route.id }}"
+      (click)="handleRouteClick(route.id)"
+      [class.active]="route.id === routeid"
+    >
+      {{ route.name }}
+    </li>
   </ul>
 </div>
 
