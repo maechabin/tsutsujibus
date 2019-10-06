@@ -15,8 +15,8 @@
     [class.nav-mobile]="mobileQuery.matches"
   >
     <app-nav
-      [routes]="routes"
-      [routeid]="selectedRouteid"
+      [routes]="mapService.routes"
+      [routeid]="mapService.selectedRouteid"
       (routeClick)="handleRouteClick($event)"
     ></app-nav>
   </mat-sidenav>
@@ -25,7 +25,7 @@
     class="map-wrapper"
     [class.map-wrapper-mobile]="mobileQuery.matches"
   >
-    <app-alert class="alert" [isRunning]="isRunning"></app-alert>
+    <app-alert class="alert" [isRunning]="mapService.isRunning"></app-alert>
     <div class="map"></div>
   </mat-sidenav-content>
 </mat-sidenav-container>

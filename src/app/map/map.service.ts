@@ -10,19 +10,44 @@ import * as colors from '../core/colors';
   providedIn: 'root',
 })
 export class MapService {
-  readonly map: LLMap;
+  /** mapインスタンス */
+  public readonly map: LLMap;
   /** バスが運行中かどうか */
-  isRunning = true;
+  private IsRunning = true;
   /** 選択された路線番号 */
-  selectedRouteid = '1';
+  private SelectedRouteid = '1';
   /** 路線情報 */
-  routes: busModel.Routes;
+  private Routes: busModel.Routes;
   /** 全てのバス路線の時刻表 */
   private timetables: busModel.Timetable[] = [];
   /** 運行中のバス路線の時刻表 */
   private runningTimetables: busModel.Timetable[] = [];
   /** バスapiを呼び出すタイマー */
   private timer: any;
+
+  /** 路線情報 */
+  get routes(): busModel.Routes {
+    return this.Routes;
+  }
+  set routes(routes: busModel.Routes) {
+    this.Routes = routes;
+  }
+
+  /** 選択された路線番号 */
+  get selectedRouteid(): string {
+    return this.SelectedRouteid;
+  }
+  set selectedRouteid(routeId: string) {
+    this.SelectedRouteid = routeId;
+  }
+
+  /** バスが運行中かどうか */
+  get isRunning(): boolean {
+    return this.IsRunning;
+  }
+  set isRunning(isRunning: boolean) {
+    this.IsRunning = isRunning;
+  }
 
   constructor(
     private busService: BusService,
@@ -51,7 +76,7 @@ export class MapService {
       });
   }
 
-  async getRoutes() {
+  async setRoutes() {
     this.routes = await this.busService.routes();
   }
 

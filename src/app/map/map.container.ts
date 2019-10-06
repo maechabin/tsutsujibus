@@ -8,7 +8,6 @@ import {
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material';
 
-import * as busModel from '../core/bus.model';
 import { MapService } from './map.service';
 
 @Component({
@@ -34,29 +33,14 @@ export class MapContainerComponent implements OnInit {
     this.mapService.clearBusMarker();
   }
 
-  /** 路線情報 */
-  get routes(): busModel.Routes {
-    return this.mapService.routes;
-  }
-
-  /** 選択された路線番号 */
-  get selectedRouteid(): string {
-    return this.mapService.selectedRouteid;
-  }
-
-  /** バスが運行中かどうか */
-  get isRunning(): boolean {
-    return this.mapService.isRunning;
-  }
-
   constructor(
+    public mapService: MapService,
     private elementRef: ElementRef,
-    private mapService: MapService,
     private media: MediaMatcher,
   ) {}
 
   async ngOnInit() {
-    await this.mapService.getRoutes();
+    await this.mapService.setRoutes();
     this.initMap();
     await this.mapService.initRoute();
     if (this.mobileQuery.matches) {
