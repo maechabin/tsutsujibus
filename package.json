@@ -6,6 +6,8 @@
     "start": "ng serve --port 5502",
     "build": "ng build",
     "build:ios": "rm -rf ios && ng run tsutsujibus:build && npx cap add ios",
+    "build:electron": "rm -rf electron && ng run tsutsujibus:build && npx cap add electron",
+    "build:android": "rm -rf android && ng run tsutsujibus:build && npx cap add android",
     "open:ios": "npx cap open ios",
     "test": "ng test",
     "lint": "ng lint",
