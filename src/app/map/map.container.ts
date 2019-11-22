@@ -49,23 +49,28 @@ export class MapContainerComponent implements OnInit {
     // });
   }
 
-  /** 路線を洗濯した時の処理 */
-  handleRouteClick(routeid: string) {
+  /**
+   * 路線を選択した時の処理
+   * @param routeid 路線ID
+   */
+  handleRouteClick(routeid: string): void {
     this.initRoute(routeid);
   }
 
-  /** ヘッダーのハンバーガーメニューをクリックした時の処理 */
-  handleMenuClick() {
+  /**
+   * ヘッダーのハンバーガーメニューをクリックした時の処理
+   */
+  handleMenuClick(): void {
     this.sidenav.toggle();
   }
 
-  private initMap() {
+  private initMap(): void {
     this.el = this.elementRef.nativeElement;
     const mapElem = this.el.querySelector('.map') as HTMLElement;
     this.mapService.init(mapElem);
   }
 
-  private async initRoute(routeid?: string) {
+  private async initRoute(routeid?: string): Promise<void> {
     await this.mapService.initRoute(routeid);
     if (this.mobileQuery.matches) {
       this.sidenav.close();
