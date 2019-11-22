@@ -1,0 +1,8 @@
+{
+  "appId": "com.tsutsujibus.app",
+  "appName": "tsutsujibus",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist/tsutsujibus",
+  "cordova": {}
+}
