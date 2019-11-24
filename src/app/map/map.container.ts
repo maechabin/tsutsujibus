@@ -16,12 +16,12 @@ import { MapService } from './map.service';
   styleUrls: ['./map.container.scss'],
 })
 export class MapContainerComponent implements OnInit {
-  private el: HTMLElement;
+  @ViewChild('sidenav', { static: false }) private readonly sidenav: MatSidenav;
+
   readonly mobileQuery: MediaQueryList = this.media.matchMedia(
     '(max-width: 720px)',
   );
-
-  @ViewChild('sidenav', { static: false }) private readonly sidenav: MatSidenav;
+  private el: HTMLElement;
 
   @HostListener('window:focus', ['$event'])
   onFocus(event: FocusEvent): void {
@@ -39,7 +39,7 @@ export class MapContainerComponent implements OnInit {
     private media: MediaMatcher,
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     this.initMap();
     this.initRoute();
 

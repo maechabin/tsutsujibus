@@ -11,7 +11,7 @@ import * as colors from '../core/colors';
 })
 export class MapService {
   /** mapインスタンス */
-  public readonly map: LLMap;
+  public readonly map: LLMap = new LLMap();
   /** バスが運行中かどうか */
   private IsRunning = true;
   /** 選択された路線番号 */
@@ -52,13 +52,13 @@ export class MapService {
   constructor(
     private busService: BusService,
     private spinnerService: SpinnerService,
-  ) {
-    this.map = new LLMap();
-  }
+  ) {}
 
   async init(mapElement: HTMLElement) {
     this.routes = await this.busService.routes();
-    this.map.initMap(mapElement);
+    setTimeout(() => {
+      this.map.initMap(mapElement);
+    }, 0);
   }
 
   async initRoute(routeid: string = this.selectedRouteid) {

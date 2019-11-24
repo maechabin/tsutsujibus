@@ -81,7 +81,11 @@ export class LLMap {
       style,
     }).addTo(this.llmap);
 
-    this.polyline = omnivore.kml(`../../../assets/kml/${rosenid}.kml`, null, geoJson);
+    this.polyline = omnivore.kml(
+      `../../../assets/kml/${rosenid}.kml`,
+      null,
+      geoJson,
+    );
   }
 
   clearPolyline() {
@@ -114,13 +118,7 @@ export class LLMap {
     });
   }
 
-  putMarker(marker: {
-    busid: string;
-    lat: number;
-    lng: number;
-  }) {
-
-
+  putMarker(marker: { busid: string; lat: number; lng: number }) {
     // const comment = `
     // <p style="font-size: 14px;">
     //   <a href="${marker.link}" target="_blank"><img src="${marker.img}" width="24" style="vertical-align: middle;" /></a>
@@ -137,17 +135,18 @@ export class LLMap {
       draggable: false,
     })
       .setZIndexOffset(1000)
-      .addTo(this.llmap).bindPopup('', {
+      .addTo(this.llmap)
+      .bindPopup('', {
         className: 'comment',
         autoClose: false,
       });
   }
 
   clearBusMarker() {
-    Object.values(this.busMarker).forEach((marker) => {
+    Object.values(this.busMarker).forEach(marker => {
       this.llmap.removeLayer(marker);
     });
-    Object.keys(this.busMarker).forEach((key) => {
+    Object.keys(this.busMarker).forEach(key => {
       delete this.busMarker[key];
     });
   }
@@ -191,11 +190,13 @@ export class LLMap {
 
     const comment = `<p>${busstop.name}</p>`;
 
-    this.busstopMarker[`busstop${busstop.id}`] = L.marker([busstop.latitude, busstop.longitude], {
-      icon,
-      draggable: false,
-    })
-      .bindPopup(comment);
+    this.busstopMarker[`busstop${busstop.id}`] = L.marker(
+      [busstop.latitude, busstop.longitude],
+      {
+        icon,
+        draggable: false,
+      },
+    ).bindPopup(comment);
   }
 
   putBusstopMarker() {
@@ -207,10 +208,10 @@ export class LLMap {
   }
 
   clearBusstopMarker() {
-    Object.values(this.busstopMarker).forEach((marker) => {
+    Object.values(this.busstopMarker).forEach(marker => {
       this.llmap.removeLayer(marker);
     });
-    Object.keys(this.busstopMarker).forEach((key) => {
+    Object.keys(this.busstopMarker).forEach(key => {
       delete this.busstopMarker[key];
     });
   }
