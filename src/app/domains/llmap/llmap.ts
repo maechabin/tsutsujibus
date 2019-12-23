@@ -14,18 +14,20 @@ export class LLMap {
   polyline: any;
 
   initMap(elem: any) {
-    const token =
-      'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+    const UserName = 'maechabin';
+    const StreetStyleId = 'ck4e56i4t0iuw1cmdi8rfkyn3';
+    const SatelliteStyleId = 'ck4edjkdr2zp01cjzsvya2cw9';
+    const Token =
+      'pk.eyJ1IjoibWFlY2hhYmluIiwiYSI6ImNrNGU0eHYxMzAya3YzZm1odWRyYjAycmsifQ.dL1yZ_6587JwS6uYjwPkGg';
+
     /** Layer */
     const streetsLayer = L.tileLayer(
-      `
-    https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${token}
-    `,
+      `https://api.mapbox.com/styles/v1/${UserName}/${StreetStyleId}/tiles/256/{z}/{x}/{y}?` +
+        `access_token=${Token}`,
       {
         attribution: `
-          <a href="https://www.openstreetmap.org/">OpenStreetMap</a>,
-          <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,
-          <a href="https://www.mapbox.com/">Mapbox</a>
+        © <a href="https://apps.mapbox.com/feedback/">Mapbox</a>,
+        © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>
         `,
         maxZoom: 18,
         id: 'mapbox.streets', // mapbox.streets | mapbox.satellite
@@ -34,14 +36,12 @@ export class LLMap {
     );
 
     const satelliteLayer = L.tileLayer(
-      `
-    https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${token}
-    `,
+      `https://api.mapbox.com/styles/v1/${UserName}/${SatelliteStyleId}/tiles/256/{z}/{x}/{y}?` +
+        `access_token=${Token}`,
       {
         attribution: `
-          <a href="https://www.openstreetmap.org/">OpenStreetMap</a>,
-          <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>,
-          <a href="https://www.mapbox.com/">Mapbox</a>
+        © <a href="https://apps.mapbox.com/feedback/">Mapbox</a>,
+        © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>
         `,
         maxZoom: 18,
         id: 'mapbox.satellite', // mapbox.streets | mapbox.satellite
