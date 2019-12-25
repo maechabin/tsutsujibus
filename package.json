@@ -1,18 +1,21 @@
 {
   "name": "tsutsujibus",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 5502",
-    "build": "ng build",
+    "build": "ng build --prod",
+    "build:aot": "ng build --aot",
     "build:ios": "rm -rf ios && ng run tsutsujibus:build && cap add ios",
-    "build:electron": "rm -rf electron && ng run tsutsujibus:build && cap add electron",
     "build:android": "rm -rf android && ng run tsutsujibus:build && cap add android",
+    "build:electron": "rm -rf electron && ng run tsutsujibus:build && cap add electron",
     "open:ios": "cap open ios",
     "open:android": "cap open android",
+    "open:electtron": "cap open electron",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": "firebase deploy"
   },
   "private": true,
   "dependencies": {
