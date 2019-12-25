@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { LLMap } from '../domains/llmap/llmap';
+import { LLMap } from '../../domains/llmap/llmap';
 import { BusService } from '../core/bus.service';
 import { SpinnerService } from '../core/spinner.service';
 import * as busModel from '../core/bus.model';
