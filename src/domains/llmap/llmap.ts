@@ -2,52 +2,30 @@ import * as L from 'leaflet';
 import 'leaflet.gridlayer.googlemutant';
 import omnivore from 'leaflet-omnivore';
 
+import * as Constants from './constants';
+
 export class LLMap {
   llmap!: L.Map;
-  busMarker: {
-    [busid: string]: L.Marker;
-  } = {};
-  busstopMarker: {
-    [busid: string]: L.Marker;
-  } = {};
-  busstopMarkerGroup: L.FeatureGroup;
-  polyline: any;
+  private readonly busMarker: Map<string, L.Marker> = new Map();
+  private readonly busstopMarker: Map<string, L.Marker> = new Map();
+  private busstopMarkerGroup: L.FeatureGroup;
+  private polyline: L.Layer;
 
-  initMap(elem: any) {
-    const UserName = 'maechabin';
-    const StreetStyleId = 'ck4e56i4t0iuw1cmdi8rfkyn3';
-    const SatelliteStyleId = 'ck4edjkdr2zp01cjzsvya2cw9';
-    const Token =
-      'pk.eyJ1IjoibWFlY2hhYmluIiwiYSI6ImNrNGU0eHYxMzAya3YzZm1odWRyYjAycmsifQ.dL1yZ_6587JwS6uYjwPkGg';
-
+  initMap(elem: HTMLElement) {
     /** Layer */
-    const streetsLayer = L.tileLayer(
-      `https://api.mapbox.com/styles/v1/${UserName}/${StreetStyleId}/tiles/256/{z}/{x}/{y}?` +
-        `access_token=${Token}`,
-      {
-        attribution: `
-        © <a href="https://apps.mapbox.com/feedback/">Mapbox</a>,
-        © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>
-        `,
-        maxZoom: 18,
-        id: 'mapbox.streets', // mapbox.streets | mapbox.satellite
-        accessToken: 'your.mapbox.access.token',
-      },
-    );
+    const streetsLayer = L.tileLayer(Constants.StreetLayer, {
+      attribution: Constants.Attribution,
+      maxZoom: 18,
+      id: Constants.LayerId.MapboxStreets,
+      accessToken: Constants.Token,
+    });
 
-    const satelliteLayer = L.tileLayer(
-      `https://api.mapbox.com/styles/v1/${UserName}/${SatelliteStyleId}/tiles/256/{z}/{x}/{y}?` +
-        `access_token=${Token}`,
-      {
-        attribution: `
-        © <a href="https://apps.mapbox.com/feedback/">Mapbox</a>,
-        © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>
-        `,
-        maxZoom: 18,
-        id: 'mapbox.satellite', // mapbox.streets | mapbox.satellite
-        accessToken: 'your.mapbox.access.token',
-      },
-    );
+    const satelliteLayer = L.tileLayer(Constants.SatelliteStyleId, {
+      attribution: Constants.Attribution,
+      maxZoom: 18,
+      id: Constants.LayerId.MapboxSatellite,
+      accessToken: Constants.Token,
+    });
 
     const googlemaps = L.gridLayer.googleMutant({
       type: 'roadmap', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
@@ -130,25 +108,26 @@ export class LLMap {
     // <p><date>${marker.createdAt}</date> ${marker.place}</p>
     // `;
 
-    this.busMarker[`bus${marker.busid}`] = L.marker([marker.lat, marker.lng], {
-      icon: this.createIcon(marker.busid),
-      draggable: false,
-    })
-      .setZIndexOffset(1000)
-      .addTo(this.llmap)
-      .bindPopup('', {
-        className: 'comment',
-        autoClose: false,
-      });
+    this.busMarker.set(
+      `bus${marker.busid}`,
+      L.marker([marker.lat, marker.lng], {
+        icon: this.createIcon(marker.busid),
+        draggable: false,
+      })
+        .setZIndexOffset(1000)
+        .addTo(this.llmap)
+        .bindPopup('', {
+          className: 'comment',
+          autoClose: false,
+        }),
+    );
   }
 
   clearBusMarker() {
-    Object.values(this.busMarker).forEach(marker => {
+    this.busMarker.forEach(marker => {
       this.llmap.removeLayer(marker);
     });
-    Object.keys(this.busMarker).forEach(key => {
-      delete this.busMarker[key];
-    });
+    this.busMarker.clear();
   }
 
   createBusstopMarker(
@@ -190,17 +169,21 @@ export class LLMap {
 
     const comment = `<p>${busstop.name}</p>`;
 
-    this.busstopMarker[`busstop${busstop.id}`] = L.marker(
-      [busstop.latitude, busstop.longitude],
-      {
+    this.busstopMarker.set(
+      `busstop${busstop.id}`,
+      L.marker([busstop.latitude, busstop.longitude], {
         icon,
         draggable: false,
-      },
-    ).bindPopup(comment);
+      }).bindPopup(comment),
+    );
   }
 
   putBusstopMarker() {
-    this.busstopMarkerGroup = L.featureGroup(Object.values(this.busstopMarker));
+    let busstopMarkers = [];
+    this.busstopMarker.forEach(marker => {
+      busstopMarkers = [...busstopMarkers, marker];
+    });
+    this.busstopMarkerGroup = L.featureGroup(busstopMarkers);
     this.busstopMarkerGroup.addTo(this.llmap);
     this.llmap.fitBounds(this.busstopMarkerGroup.getBounds(), {
       maxZoom: 16,
@@ -208,12 +191,10 @@ export class LLMap {
   }
 
   clearBusstopMarker() {
-    Object.values(this.busstopMarker).forEach(marker => {
+    this.busstopMarker.forEach(marker => {
       this.llmap.removeLayer(marker);
     });
-    Object.keys(this.busstopMarker).forEach(key => {
-      delete this.busstopMarker[key];
-    });
+    this.busstopMarker.clear();
   }
 
   updateMarkerLatLng(marker: {
@@ -224,11 +205,12 @@ export class LLMap {
   }) {
     const newLatLng = new L.LatLng(marker.lat, marker.lng);
 
-    if (!this.busMarker[`bus${marker.busid}`]) {
+    if (!this.busMarker.has(`bus${marker.busid}`)) {
       this.putMarker(marker);
     }
 
-    this.busMarker[`bus${marker.busid}`]
+    this.busMarker
+      .get(`bus${marker.busid}`)
       .setIcon(this.createIcon(marker.busid, 'marker-icon-active'))
       .setLatLng(newLatLng)
       .setPopupContent(marker.comment);
