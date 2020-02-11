@@ -16,7 +16,7 @@ import { MapService } from './map.service';
   styleUrls: ['./map.container.scss'],
 })
 export class MapContainerComponent implements OnInit {
-  @ViewChild('sidenav', { static: false }) private readonly sidenav: MatSidenav;
+  @ViewChild('sidenav') private readonly sidenav: MatSidenav;
 
   readonly mobileQuery: MediaQueryList = this.media.matchMedia(
     '(max-width: 720px)',
