@@ -5,7 +5,6 @@
     "ng": "ng",
     "start": "ng serve --port 5502",
     "build": "ng build --prod",
-    "build:aot": "ng build --aot",
     "build:ios": "rm -rf ios && ng run tsutsujibus:build && cap add ios",
     "build:android": "rm -rf android && ng run tsutsujibus:build && cap add android",
     "build:electron": "rm -rf electron && ng run tsutsujibus:build && cap add electron",
